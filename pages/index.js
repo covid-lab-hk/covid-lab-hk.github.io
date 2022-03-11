@@ -30,7 +30,7 @@ export default function Home(props) {
   //let all_csv_data = map_key_to_eng([...props.chi_csv, ...props.eng_csv]);
   //let curr_time = props.curr_time;
 
-  let [currTime, setCurrentTime] = useState("");
+  let [currTime, setCurrTime] = useState("");
   let [csvData, setCsvData] = useState([]);
   useEffect(() => {
     //console.log("get props", props.chi_csv[0], props.eng_csv[0]);
