@@ -30,15 +30,15 @@ export default function Home(props) {
   //let all_csv_data = map_key_to_eng([...props.chi_csv, ...props.eng_csv]);
   //let curr_time = props.curr_time;
 
-  let [currTime, setCurrTime] = useState("");
-  let [csvData, setCsvData] = useState([]);
+  let [currTime, setCurrTime] = useState(props.curr_time);
+  let [csvData, setCsvData] = useState(
+    map_key_to_eng([...props.chi_csv, ...props.eng_csv])
+  );
   useEffect(() => {
     //console.log("get props", props.chi_csv[0], props.eng_csv[0]);
-
-    axios.get("/chp-gov-hk-files-api/building_list_chi.csv");
-    setCurrTime(moment().tz("Asia/Hong_Kong").format("L LTS") + " HKT");
-
-    fetchCsvFiles();
+    //axios.get("/chp-gov-hk-files-api/building_list_chi.csv");
+    //setCurrTime(moment().tz("Asia/Hong_Kong").format("L LTS") + " HKT");
+    //fetchCsvFiles();
     // axios
     //   .get("http://www.chp.gov.hk/files/misc/building_list_chi.csv")
     //   .then((response) => {
@@ -267,3 +267,46 @@ export default function Home(props) {
 //     },
 //   };
 // }
+
+export async function getStaticProps(context) {
+  // Call an external API endpoint to get posts
+  let res = await axios.get(
+    "http://www.chp.gov.hk/files/misc/building_list_chi.csv",
+    { responseType: "blob" }
+  );
+  let csv_file = res.data;
+  let chi_csv = {};
+  try {
+    console.log(csv_file);
+    if (csv_file) {
+      let csv_str = csv_file;
+      chi_csv = await csv().fromString(csv_str);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  res = await axios.get(
+    "http://www.chp.gov.hk/files/misc/building_list_eng.csv",
+    { responseType: "blob" }
+  );
+  csv_file = res.data;
+  let eng_csv = {};
+  try {
+    if (csv_file) {
+      let csv_str = res.data;
+      eng_csv = await csv().fromString(csv_str);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  let curr_time = moment().tz("Asia/Hong_Kong").format("L LTS") + " HKT";
+
+  return {
+    props: {
+      chi_csv,
+      eng_csv,
+      curr_time,
+    },
+  };
+}
