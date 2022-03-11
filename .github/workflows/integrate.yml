@@ -6,7 +6,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      NEXT_PUBLIC_BASE_PATH: "covid-lab-hk.github.io"
+      NEXT_PUBLIC_BASE_PATH: "/covid-lab-hk.github.io"
     defaults:
       run:
         working-directory: ./
