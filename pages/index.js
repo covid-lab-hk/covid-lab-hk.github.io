@@ -37,6 +37,8 @@ export default function Home(props) {
 
     axios.get("/chp-gov-hk-files-api/building_list_chi.csv");
     setCurrTime(moment().tz("Asia/Hong_Kong").format("L LTS") + " HKT");
+
+    fetchCsvFiles();
     // axios
     //   .get("http://www.chp.gov.hk/files/misc/building_list_chi.csv")
     //   .then((response) => {
@@ -126,7 +128,11 @@ export default function Home(props) {
     <div className="overflow-auto bg-slate-900 min-h-screen">
       <Head>
         <title>Covid Lab HK</title>
-        <meta name="description" content="covid-lab-hk" />
+        <meta
+          name="description"
+          content="過去 14 天內有嚴重急性呼吸綜合症冠狀病毒 2
+            的陽性檢測個案曾居住的住宅大廈名單搜尋噐"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
