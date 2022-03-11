@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: "14"
       - run: npm install
-      - run: npm run build && npm run export && touch ./build/.nojekyll
+      - run: npm run build && npm run export && touch ./out/.nojekyll
         env:
           CI: true
 
