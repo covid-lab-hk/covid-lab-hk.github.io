@@ -10,6 +10,6 @@ module.exports = {
     path: "",
   },
   // Use the CDN in production and localhost for development.
-  basePath: "/covid-lab-hk.github.io",
-  assetPrefix: "/covid-lab-hk.github.io",
+  basePath: "/",
+  assetPrefix: "/",
 };
