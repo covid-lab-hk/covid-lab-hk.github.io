@@ -308,5 +308,6 @@ export async function getStaticProps(context) {
       eng_csv,
       curr_time,
     },
+    revalidate: 1,
   };
 }
