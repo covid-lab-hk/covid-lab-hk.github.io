@@ -9,7 +9,7 @@ module.exports = {
     loader: "akamai",
     path: "",
   },
-  // Use the CDN in production and localhost for development.
-  basePath: "/",
-  assetPrefix: "/",
+  // // Use the CDN in production and localhost for development.
+  // basePath: "/",
+  // assetPrefix: "/",
 };
