@@ -9,6 +9,14 @@ module.exports = {
     loader: "akamai",
     path: "",
   },
+  async rewrites() {
+    return [
+      {
+        source: "/chp-gov-hk-files-api/:path*",
+        destination: "https://chp.gov.hk/files/misc/:path*",
+      },
+    ];
+  },
   // // Use the CDN in production and localhost for development.
   // basePath: "/",
   // assetPrefix: "/",
