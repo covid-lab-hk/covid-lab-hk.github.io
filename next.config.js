@@ -3,6 +3,10 @@ const isProd = process.env.NODE_ENV === "production";
 //distDir: "build",
 //reactStrictMode: true,
 module.exports = {
+  images: {
+    loader: "akamai",
+    path: "",
+  },
   // Use the CDN in production and localhost for development.
   basePath: process.env.NEXT_PUBLIC_BASE_PATH,
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH,
