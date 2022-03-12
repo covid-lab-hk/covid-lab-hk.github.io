@@ -48,7 +48,7 @@ export default function Home(props) {
         setCurrTime(response.data.curr_time);
         let all_csv = [...response.data.chi_csv, ...response.data.eng_csv];
         setCsvData(all_csv);
-        console.log("env csv : ", response.data.eng_csv);
+        
         let district_data = {};
 
         all_csv.forEach((item) => {
@@ -58,12 +58,7 @@ export default function Home(props) {
             district_data[item.district] = 1;
           }
         });
-        console.log(district_data);
-        console.log(
-          Object.entries(district_data).map((item) => {
-            return { text: item[0], count: item[1] };
-          })
-        );
+        
         setDistrictData(
           Object.entries(district_data).map((item) => {
             return { text: item[0], count: item[1] };
@@ -131,7 +126,7 @@ export default function Home(props) {
       return row["district"].toLowerCase().includes(district.toLowerCase());
     });
     setInputText("");
-    console.log("filteredData: ", filteredData);
+    
     setFilteredData(filteredData);
     setSelectedDistrict(district);
   };
@@ -338,13 +333,13 @@ export async function getStaticProps(context) {
   let csv_file = res.data;
   let chi_csv = {};
   try {
-    console.log(csv_file);
+    //console.log(csv_file);
     if (csv_file) {
       let csv_str = csv_file;
       chi_csv = await csv().fromString(csv_str);
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
   }
 
   res = await axios.get(
@@ -359,7 +354,7 @@ export async function getStaticProps(context) {
       eng_csv = await csv().fromString(csv_str);
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
   }
   let curr_time = moment().tz("Asia/Hong_Kong").format("L LTS") + " HKT";
 
