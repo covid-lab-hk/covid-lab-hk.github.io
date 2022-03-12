@@ -48,7 +48,7 @@ export default function Home(props) {
         setCurrTime(response.data.curr_time);
         let all_csv = [...response.data.chi_csv, ...response.data.eng_csv];
         setCsvData(all_csv);
-        
+
         let district_data = {};
 
         all_csv.forEach((item) => {
@@ -58,7 +58,7 @@ export default function Home(props) {
             district_data[item.district] = 1;
           }
         });
-        
+
         setDistrictData(
           Object.entries(district_data).map((item) => {
             return { text: item[0], count: item[1] };
@@ -126,7 +126,7 @@ export default function Home(props) {
       return row["district"].toLowerCase().includes(district.toLowerCase());
     });
     setInputText("");
-    
+
     setFilteredData(filteredData);
     setSelectedDistrict(district);
   };
@@ -157,6 +157,7 @@ export default function Home(props) {
       <div>
         {data.map((item, index) => (
           <button
+            key={index}
             type="button"
             onClick={() => {
               changeFilteredListByDistrict(item.text);
@@ -168,7 +169,7 @@ export default function Home(props) {
             } ring-purple-300 text-white  from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2`}
           >
             {item.text}
-            <span class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">
+            <span className="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">
               {item.count}
             </span>
           </button>
