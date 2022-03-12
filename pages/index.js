@@ -34,26 +34,47 @@ export default function Home(props) {
   let [csvData, setCsvData] = useState(
     map_key_to_eng([...props.chi_csv, ...props.eng_csv])
   );
+
+  let [districtData, setDistrictData] = useState([]);
+  let [selectedDistrict, setSelectedDistrict] = useState("");
   useEffect(() => {
     //console.log("get props", props.chi_csv[0], props.eng_csv[0]);
     //axios.get("/chp-gov-hk-files-api/building_list_chi.csv");
     //setCurrTime(moment().tz("Asia/Hong_Kong").format("L LTS") + " HKT");
     //fetchCsvFiles();
-    // axios
-    //   .get("http://www.chp.gov.hk/files/misc/building_list_chi.csv")
-    //   .then((response) => {
-    //     console.log(response);
-    //     return;
-    //     csv()
-    //       .fromStream()
-    //       .then((csvRow) => {
-    //         console.log(csvRow); // => [["1","2","3"], ["4","5","6"], ["7","8","9"]]
-    //       });
-    //   });
+    axios.get("/api/chp-gov-hk/14-days-covid-buildings").then((response) => {
+      //console.log(response);
+      if (response.status == 200) {
+        setCurrTime(response.data.curr_time);
+        let all_csv = [...response.data.chi_csv, ...response.data.eng_csv];
+        setCsvData(all_csv);
+        console.log("env csv : ", response.data.eng_csv);
+        let district_data = {};
+
+        all_csv.forEach((item) => {
+          if (item.district in district_data) {
+            district_data[item.district] += 1;
+          } else {
+            district_data[item.district] = 1;
+          }
+        });
+        console.log(district_data);
+        console.log(
+          Object.entries(district_data).map((item) => {
+            return { text: item[0], count: item[1] };
+          })
+        );
+        setDistrictData(
+          Object.entries(district_data).map((item) => {
+            return { text: item[0], count: item[1] };
+          })
+        );
+      }
+    });
   }, []);
 
   let fetchCsvFiles = async () => {
-    let res = await axios.get("/chp-gov-hk-files-api/building_list_chi.csv", {
+    let res = await axios.get("/api/chp-gov-hk-files/building_list_chi.csv", {
       responseType: "blob",
     });
     let csv_file = res.data;
@@ -67,7 +88,7 @@ export default function Home(props) {
     } catch (err) {
       console.log(err);
     }
-    res = await axios.get("/chp-gov-hk-files-api/building_list_eng.csv", {
+    res = await axios.get("/api/chp-gov-hk-files/building_list_eng.csv", {
       responseType: "blob",
     });
     csv_file = res.data;
@@ -98,11 +119,23 @@ export default function Home(props) {
     let text = inputText;
     if (!text || text.trim() == "") return <></>;
     //console.log("trim text: ", text);
+    setSelectedDistrict("");
     const filteredData = csvData.filter((row) => {
       return row["building_name"].toLowerCase().includes(text);
     });
     setFilteredData(filteredData);
   };
+
+  let changeFilteredListByDistrict = (district) => {
+    const filteredData = csvData.filter((row) => {
+      return row["district"].toLowerCase().includes(district.toLowerCase());
+    });
+    setInputText("");
+    console.log("filteredData: ", filteredData);
+    setFilteredData(filteredData);
+    setSelectedDistrict(district);
+  };
+
   function SearchList({ data }) {
     return (
       <>
@@ -121,6 +154,31 @@ export default function Home(props) {
           ))}
         </div>
       </>
+    );
+  }
+
+  function DistrictList({ data }) {
+    return (
+      <div>
+        {data.map((item, index) => (
+          <button
+            type="button"
+            onClick={() => {
+              changeFilteredListByDistrict(item.text);
+            }}
+            className={`${
+              selectedDistrict == item.text
+                ? "bg-purple-300"
+                : "bg-gradient-to-r"
+            } ring-purple-300 text-white  from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2`}
+          >
+            {item.text}
+            <span class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">
+              {item.count}
+            </span>
+          </button>
+        ))}
+      </div>
     );
   }
 
@@ -147,9 +205,12 @@ export default function Home(props) {
           <h2>最後更新時間 ： {currTime} </h2>
 
           <div className="flex flex-col justify-center align-items-center">
+            <DistrictList data={districtData}></DistrictList>
+
             <div className="">
               <input
                 type="text"
+                value={inputText}
                 onChange={inputHandler}
                 className=" rounded-lg border-transparent appearance-none border border-gray-300 py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 placeholder="Search"

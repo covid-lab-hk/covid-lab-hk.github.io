@@ -12,7 +12,7 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/chp-gov-hk-files-api/:path*",
+        source: "/api/chp-gov-hk-files/:path*",
         destination: "https://chp.gov.hk/files/misc/:path*",
       },
     ];
